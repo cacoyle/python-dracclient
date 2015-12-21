@@ -21,6 +21,7 @@ from dracclient import exceptions
 from dracclient.resources import bios
 from dracclient.resources import job
 from dracclient.resources import lifecycle_controller
+from dracclient.resources import nic
 from dracclient.resources import raid
 from dracclient.resources import uris
 from dracclient import utils
