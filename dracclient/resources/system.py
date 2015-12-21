@@ -45,7 +45,7 @@ class SystemInfo(object):
                                             uris.DCIM_SystemView,
                                             find_all=True)
 
-	return self._parse_system_info(system_info)
+	return self._parse_system_info(system_info[0])
 
     def _parse_system_info(self, system_info):
 	return System(
