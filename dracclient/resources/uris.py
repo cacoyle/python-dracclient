@@ -42,7 +42,7 @@ DCIM_ControllerView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 
 DCIM_LifecycleJob = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                      'DCIM_LifecycleJob')
-DCIM_NICView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2'
+DCIM_NICView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                 'DCIM_NICView')
 
 DCIM_PhysicalDiskView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
