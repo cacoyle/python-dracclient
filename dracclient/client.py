@@ -23,6 +23,7 @@ from dracclient.resources import job
 from dracclient.resources import lifecycle_controller
 from dracclient.resources import nic
 from dracclient.resources import raid
+from dracclient.resources import system
 from dracclient.resources import uris
 from dracclient import utils
 from dracclient import wsman
@@ -54,6 +55,7 @@ class DRACClient(object):
         self._bios_cfg = bios.BIOSConfiguration(self.client)
         self._raid_mgmt = raid.RAIDManagement(self.client)
 	self._nic_mgmt = nic.NICManagement(self.client)
+	self._sys_mgmt = system.SystemInfo(self.client)
 
     def get_power_state(self):
         """Returns the current power state of the node
@@ -406,6 +408,9 @@ class DRACClient(object):
 
     def list_network_interfaces(self):
 	return self._nic_mgmt.list_network_interfaces()
+
+    def system_info(self):
+        return self._sys_mgmt.get_system_info()
 
 
 class WSManClient(wsman.Client):
