@@ -53,6 +53,7 @@ class DRACClient(object):
         self._boot_mgmt = bios.BootManagement(self.client)
         self._bios_cfg = bios.BIOSConfiguration(self.client)
         self._raid_mgmt = raid.RAIDManagement(self.client)
+	self._nic_mgmt = nic.NICManagement(self.client)
 
     def get_power_state(self):
         """Returns the current power state of the node
@@ -402,6 +403,9 @@ class DRACClient(object):
             resource_uri=uris.DCIM_RAIDService,
             cim_creation_class_name='DCIM_RAIDService',
             cim_name='DCIM:RAIDService', target=raid_controller)
+
+    def list_network_interfaces(self):
+	return self._nic_mgmt.list_network_interfaces()
 
 
 class WSManClient(wsman.Client):

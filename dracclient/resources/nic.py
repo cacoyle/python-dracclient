@@ -17,7 +17,7 @@ from dracclient import exceptions
 from dracclient.resources import uris
 from dracclient import utils
 
-NetworkInterface = collections.namedtupe(
+NetworkInterface = collections.namedtuple(
     'NetworkInterface',
     ['id', 'mac'])
 
@@ -45,12 +45,12 @@ class NICManagement(object):
                                             uris.DCIM_NICView,
                                             find_all=True)
 
-	return [self._parse_network_interfaces(network_interfaces)
+	return [self._parse_network_interfaces(network_interface)
 		for network_interface in network_interfaces]
 
     def _parse_network_interfaces(self, network_interface):
 	return NetworkInterface(
-	    id=self._get_network_interface_attr(network_interface, 'FQQD'),
+	    id=self._get_network_interface_attr(network_interface, 'FQDD'),
             mac=self._get_network_interface_attr(
                 network_interface, 'PermanentMACAddress'))
 
