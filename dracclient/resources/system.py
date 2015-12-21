@@ -17,43 +17,45 @@ from dracclient import exceptions
 from dracclient.resources import uris
 from dracclient import utils
 
-NetworkInterface = collections.namedtuple(
-    'NetworkInterface',
-    ['id', 'mac'])
+System = collections.namedtuple(
+    'System',
+    ['id', 'model', 'generation', 'servicetag' ])
 
-class NICManagement(object):
+class SystemInfo(object):
 
     def __init__(self, client):
-        """Creates NICManagement object
+        """Creates SystemInfo object
 
         :param client: an instance of WSManClient
         """
         self.client = client
 
-    def list_network_interfaces(self):
-        """Returns the list of NICs
+    def get_system_info(self):
+        """Returns system information
 
-        :returns: a list of NetworkInterface objects
+        :returns: a System object
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
         :raises: DRACOperationFailed on error reported back by the DRAC
 	"""
 
-        doc = self.client.enumerate(uris.DCIM_NICView)
+        doc = self.client.enumerate(uris.DCIM_SystemView)
 
-	network_interfaces = utils.find_xml(doc, 'DCIM_NICView',
-                                            uris.DCIM_NICView,
+	system_info = utils.find_xml(doc, 'DCIM_SystemView',
+                                            uris.DCIM_SystemView,
                                             find_all=True)
 
-	return [self._parse_network_interfaces(network_interface)
-		for network_interface in network_interfaces]
+	return self._parse_system_info(system_info)
 
-    def _parse_network_interfaces(self, network_interface):
-	return NetworkInterface(
-	    id=self._get_network_interface_attr(network_interface, 'FQDD'),
-            mac=self._get_network_interface_attr(
-                network_interface, 'PermanentMACAddress'))
+    def _parse_system_info(self, system_info):
+	return System(
+	    id=self._get_system_info_attr(system_info, 'Hostname'),
+            model=self._get_system_info_attr(system_info, 'Model'),
+            generation=self._get_system_info_attr(system_info,
+                'SystemGeneration'),
+            servicetag=self._get_system_info_attr(system_info,
+                'ServiceTag'))
 
-    def _get_network_interface_attr(self, network_interface, attr_name):
+    def _get_system_info_attr(self, system_info, attr_name):
         return utils.get_wsman_resource_attr(
-            network_interface, uris.DCIM_NICView, attr_name)
+            system_info, uris.DCIM_SystemView, attr_name)
