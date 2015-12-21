@@ -19,8 +19,10 @@ import logging
 
 from dracclient import exceptions
 from dracclient.resources import bios
+from dracclient.resources import cpu
 from dracclient.resources import job
 from dracclient.resources import lifecycle_controller
+from dracclient.resources import memory
 from dracclient.resources import nic
 from dracclient.resources import raid
 from dracclient.resources import system
@@ -56,6 +58,8 @@ class DRACClient(object):
         self._raid_mgmt = raid.RAIDManagement(self.client)
 	self._nic_mgmt = nic.NICManagement(self.client)
 	self._sys_mgmt = system.SystemInfo(self.client)
+	self._cpu_mgmt = cpu.CPUManagement(self.client)
+	self._mem_mgmt = memory.MemoryManagement(self.client)
 
     def get_power_state(self):
         """Returns the current power state of the node
@@ -411,6 +415,12 @@ class DRACClient(object):
 
     def system_info(self):
         return self._sys_mgmt.get_system_info()
+
+    def list_cpus(self):
+	return self._cpu_mgmt.list_cpus()
+
+    def list_memory(self):
+	return self._mem_mgmt.list_memory()
 
 
 class WSManClient(wsman.Client):

@@ -40,8 +40,15 @@ DCIM_ComputerSystem = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2'
 DCIM_ControllerView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                        'DCIM_ControllerView')
 
+DCIM_CPUView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+               'DCIM_CPUView')
+
 DCIM_LifecycleJob = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                      'DCIM_LifecycleJob')
+
+DCIM_MemoryView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                   'DCIM_MemoryView')
+
 DCIM_NICView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                 'DCIM_NICView')
 
