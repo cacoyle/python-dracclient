@@ -49,7 +49,7 @@ class SystemInfo(object):
 
     def _parse_system_info(self, system_info):
 	return System(
-	    id=self._get_system_info_attr(system_info, 'Hostname'),
+	    id=self._get_system_info_attr(system_info, 'HostName'),
             model=self._get_system_info_attr(system_info, 'Model'),
             generation=self._get_system_info_attr(system_info,
                 'SystemGeneration'),
