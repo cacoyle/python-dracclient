@@ -423,7 +423,7 @@ class DRACClient(object):
 	return self._mem_mgmt.list_memory()
 
     def one_time_boot(self, boot_source):
-        return self._bios_mgmt.one_time_boot(boot_source)
+        return self._boot_mgmt.one_time_boot(boot_source)
 
 class WSManClient(wsman.Client):
     """Wrapper for wsman.Client with return value checking"""

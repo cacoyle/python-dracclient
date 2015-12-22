@@ -265,8 +265,10 @@ class BootManagement(object):
 	    msg = 'Unknown boot source: %s' % boot_source
             raise exceptions.InvalidParameterValue(reason=msg)
 
-	self.client.invoke(uris.DCIM_OSDeploymentService, boot_source)
+        selectors = {'CreationClassName': 'DCIM_OSDeploymentService',
+                     'Name': 'DCIM:OSDeploymentService'}
 
+        return self.client.invoke(uris.DCIM_OSDeploymentService, boot_source, selectors)
 
 class BIOSAttribute(object):
     """Generic BIOS attribute class"""
