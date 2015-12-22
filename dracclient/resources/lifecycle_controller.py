@@ -42,3 +42,21 @@ class LifecycleControllerManagement(object):
                                         uris.DCIM_SystemView).text
 
         return tuple(map(int, (lc_version_str.split('.'))))
+
+    def list_ilm_settings(self):
+        """
+        """
+
+        result = {}
+        namespaces = [(uris.DCIM_iDRACCardEnumeration, iDRACCardEnumerableAttribute),
+                      (uris.DCIM_iDRACCardString, iDRACCardStringAttribute),
+                      (uris.DCIM_iDRACCardInteger, iDRACCardIntegerAttribute)]
+        for (namespace, attr_cls) in namespaces:
+            attribs = self._get_config(namespace, attr_cls)
+            if not set(result).isdisjoint(set(attribs)):
+                raise exceptions.DRACOperationFailed(
+                    drac_messages=('Colliding attributes %r' % (
+                        set(result) & set(attribs))))
+            result.update(attribs)
+        return result
+
