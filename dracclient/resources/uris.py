@@ -52,6 +52,9 @@ DCIM_MemoryView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 DCIM_NICView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                 'DCIM_NICView')
 
+DCIM_OSDeploymentService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                            'DCIM_OSDeploymentService')
+
 DCIM_PhysicalDiskView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                          'DCIM_PhysicalDiskView')
 

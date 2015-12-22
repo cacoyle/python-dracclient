@@ -422,6 +422,8 @@ class DRACClient(object):
     def list_memory(self):
 	return self._mem_mgmt.list_memory()
 
+    def one_time_boot(self, boot_source):
+        return self._bios_mgmt.one_time_boot(boot_source)
 
 class WSManClient(wsman.Client):
     """Wrapper for wsman.Client with return value checking"""
@@ -454,16 +456,17 @@ class WSManClient(wsman.Client):
         resp = super(WSManClient, self).invoke(resource_uri, method, selectors,
                                                properties)
 
-        return_value = utils.find_xml(resp, 'ReturnValue', resource_uri).text
-        if return_value == utils.RET_ERROR:
-            message_elems = utils.find_xml(resp, 'Message', resource_uri, True)
-            messages = [message_elem.text for message_elem in message_elems]
-            raise exceptions.DRACOperationFailed(drac_messages=messages)
+	if expected_return_value:
+            return_value = utils.find_xml(resp, 'ReturnValue', resource_uri).text
+            if return_value == utils.RET_ERROR:
+                message_elems = utils.find_xml(resp, 'Message', resource_uri, True)
+                messages = [message_elem.text for message_elem in message_elems]
+                raise exceptions.DRACOperationFailed(drac_messages=messages)
 
-        if (expected_return_value is not None and
-                return_value != expected_return_value):
-            raise exceptions.DRACUnexpectedReturnValue(
-                expected_return_value=expected_return_value,
-                actual_return_value=return_value)
+            if (expected_return_value is not None and
+                    return_value != expected_return_value):
+                raise exceptions.DRACUnexpectedReturnValue(
+                    expected_return_value=expected_return_value,
+                    actual_return_value=return_value)
 
-        return resp
+            return resp

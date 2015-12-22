@@ -46,13 +46,13 @@ class MemoryManagement(object):
                                           find_all=True)
 
 	return [self._parse_memory(memory)
-		for memory in intalled_memory]
+		for memory in installed_memory]
 
     def _parse_memory(self, memory):
 	return Memory(
 	    id=self._get_memory_attr(memory, 'FQDD'),
-            mac=self._get_memory_attr(memory, 'Size'))
+            size=self._get_memory_attr(memory, 'Size'))
 
-    def _get_network_interface_attr(self, memory, attr_name):
+    def _get_memory_attr(self, memory, attr_name):
         return utils.get_wsman_resource_attr(
             memory, uris.DCIM_MemoryView, attr_name)

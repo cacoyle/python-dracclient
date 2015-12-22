@@ -256,6 +256,16 @@ class BootManagement(object):
         return utils.get_wsman_resource_attr(drac_boot_device,
                                              uris.DCIM_BootSourceSetting,
                                              attr_name)
+    def one_time_boot(self, boot_source):
+	"""
+	"""
+	valid_sources = ('BootToHD', 'BootToPXE')
+
+	if boot_source not in valid_sources:
+	    msg = 'Unknown boot source: %s' % boot_source
+            raise exceptions.InvalidParameterValue(reason=msg)
+
+	self.client.invoke(uris.DCIM_OSDeploymentService, boot_source)
 
 
 class BIOSAttribute(object):
