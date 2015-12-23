@@ -459,9 +459,7 @@ class WSManClient(wsman.Client):
 
         resp = super(WSManClient, self).invoke(resource_uri, method, selectors,
                                                properties)
-	from lxml import etree
 
-	print etree.tostring(resp)
 	if expected_return_value:
             return_value = utils.find_xml(resp, 'ReturnValue', resource_uri).text
             if return_value == utils.RET_ERROR:
