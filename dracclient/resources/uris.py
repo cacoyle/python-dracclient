@@ -46,6 +46,9 @@ DCIM_CPUView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 DCIM_iDRACCardEnumeration = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                'DCIM_iDRACCardEnumeration')
 
+DCIM_iDRACCardService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+               'DCIM_iDRACCardService')
+
 DCIM_iDRACCardString = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                'DCIM_iDRACCardString')
 
