@@ -426,7 +426,7 @@ class DRACClient(object):
         return self._bios_mgmt.one_time_boot(boot_source)
 
     def set_admin_password(self, password):
-        return lifecycle_controller.set_admin_password(
+        return lifecycle_controller.LifecycleControllerManagement(
             self.client).set_admin_password(password)
 
 class WSManClient(wsman.Client):
@@ -459,7 +459,9 @@ class WSManClient(wsman.Client):
 
         resp = super(WSManClient, self).invoke(resource_uri, method, selectors,
                                                properties)
+	from lxml import etree
 
+	print etree.tostring(resp)
 	if expected_return_value:
             return_value = utils.find_xml(resp, 'ReturnValue', resource_uri).text
             if return_value == utils.RET_ERROR:

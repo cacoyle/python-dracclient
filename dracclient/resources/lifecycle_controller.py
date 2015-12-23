@@ -47,19 +47,19 @@ class LifecycleControllerManagement(object):
 	"""
 	"""
 
-	selectors = {'CreationClassName': 'DCIM_iDRACCardService',
-                     'Name': 'DCIM:iDRACCardService'}
+	selectors = {"Name": "DCIM:iDRACCardService",
+                        "SystemName": "DCIM:ComputerSystem",
+                        "CreationClassName": "DCIM_iDRACCardService",
+                        "SystemCreationClassName": "DCIM_ComputerSystem"}
 
         properties = {'Target': 'iDRAC.Embedded.1',
                       'AttributeName': 'Users.2#Password',
                       'AttributeValue': password}
 
-        doc = self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
-                                 selectors, properties)
-
+        self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+                           selectors, properties)
         properties = {'Target': 'iDRAC.Embedded.1',
                       'ScheduledStartTime': 'TIME_NOW'}
 
-	doc = self.client.invoke(uris.DCIM_iDRACCardService,
-                                 'CreateTargetedConfigJob',
-                                 selectors, properties)
+	self.client.invoke(uris.DCIM_iDRACCardService,
+                           'CreateTargetedConfigJob', selectors, properties)
