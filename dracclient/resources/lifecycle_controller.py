@@ -43,6 +43,18 @@ class LifecycleControllerManagement(object):
 
         return tuple(map(int, (lc_version_str.split('.'))))
 
+    def _get_config(self, resource, attr_cls):
+        result = {}
+
+        doc = self.client.enumerate(resource)
+        items = doc.find('.//{%s}Items' % wsman.NS_WSMAN)
+
+        for item in items:
+            attribute = attr_cls.parse(item)
+            result[attribute.name] = attribute
+
+        return result
+
     def list_ilm_settings(self):
         """
         """
