@@ -425,10 +425,9 @@ class DRACClient(object):
     def one_time_boot(self, boot_source):
         return self._bios_mgmt.one_time_boot(boot_source)
 
-    def list_ilm_settings(self):
-	return lifecycle_controller.LifecycleControllerManagement(
-                                    self.client).list_ilm_settings()
-
+    def set_admin_password(self, password):
+        return lifecycle_controller.set_admin_password(
+            self.client).set_admin_password(password)
 
 class WSManClient(wsman.Client):
     """Wrapper for wsman.Client with return value checking"""
