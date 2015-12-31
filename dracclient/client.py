@@ -423,11 +423,14 @@ class DRACClient(object):
 	return self._mem_mgmt.list_memory()
 
     def one_time_boot(self, boot_source):
-        return self._bios_mgmt.one_time_boot(boot_source)
+        return self._boot_mgmt.one_time_boot(boot_source)
 
     def set_admin_password(self, password):
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).set_admin_password(password)
+
+    def get_bios_setting(self, namespace, setting):
+	return self._bios_cfg.get_bios_setting(namespace, setting)
 
 class WSManClient(wsman.Client):
     """Wrapper for wsman.Client with return value checking"""
