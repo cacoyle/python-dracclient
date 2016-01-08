@@ -429,6 +429,14 @@ class DRACClient(object):
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).set_admin_password(password)
 
+    def list_remote_services(self):
+        return lifecycle_controller.LifecycleControllerManagement(
+            self.client).list_remote_services()
+
+    def set_remote_services(self, settings):
+        return lifecycle_controller.LifecycleControllerManagement(
+            self.client).set_remote_services(settings)
+
     def get_bios_setting(self, namespace, setting):
 	return self._bios_cfg.get_bios_setting(namespace, setting)
 
