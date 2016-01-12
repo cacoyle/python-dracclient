@@ -44,7 +44,7 @@ def find_xml(doc, item, namespace, find_all=False):
     return doc.find(query)
 
 
-def get_wsman_resource_attr(doc, resource_uri, attr_name, nullable=False):
+def get_wsman_resource_attr(doc, resource_uri, attr_name, nullable=False, find_all=False):
     """Find an attribute of a resource in an ElementTree object.
 
     :param doc: the element tree object.
@@ -55,7 +55,12 @@ def get_wsman_resource_attr(doc, resource_uri, attr_name, nullable=False):
                      value of True. In this case, it will return None.
     :returns: value of the attribute
     """
-    item = find_xml(doc, attr_name, resource_uri)
+    item = find_xml(doc, attr_name, resource_uri, find_all)
+
+    if find_all:
+	if len(item) == 1:
+	    return item.pop().text.strip()
+	return([x.text.strip() for x in item])
 
     if not nullable:
         return item.text.strip()
