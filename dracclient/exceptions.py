@@ -17,6 +17,7 @@ class BaseClientException(Exception):
     msg_fmt = 'An unknown exception occurred'
 
     def __init__(self, message=None, **kwargs):
+        self.messages = kwargs.get("drac_messages", [])
         message = self.msg_fmt % kwargs
         super(BaseClientException, self).__init__(message)
 
