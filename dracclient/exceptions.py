@@ -41,7 +41,7 @@ class InvalidParameterValue(BaseClientException):
 
 
 class WSManRequestFailure(BaseClientException):
-    msg_fmt = ('WSMan request failed')
+    msg_fmt = ('WSMan request failed: %(drac_error)s')
 
 
 class WSManInvalidResponse(BaseClientException):

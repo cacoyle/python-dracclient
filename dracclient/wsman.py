@@ -65,9 +65,10 @@ class Client(object):
                 data=payload,
                 # TODO(ifarkas): enable cert verification
                 verify=False)
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as e:
+	    print " *** %s *** " % __name__
             LOG.exception('Request failed')
-            raise exceptions.WSManRequestFailure()
+            raise exceptions.WSManRequestFailure(drac_error=e.message)
 
         LOG.debug('Received response from %(endpoint)s: %(payload)s',
                   {'endpoint': self.endpoint, 'payload': resp.content})

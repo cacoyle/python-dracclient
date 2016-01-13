@@ -63,6 +63,23 @@ class LifecycleControllerManagement(object):
 
 	return tuple(map(int, (lc_version_str.split('.'))))
 
+    def get_status(self):
+	"""
+	"""
+
+	selectors = {
+		"Name": "DCIM:LCService",
+		"SystemName": "DCIM:ComputerSystem",
+		"CreationClassName": "DCIM_LCService",
+		"SystemCreationClassName": "DCIM_ComputerSystem"
+	}
+
+	doc = self.client.invoke(uris.DCIM_LCService, "GetRSStatus", selectors)
+
+	lc_status = utils.find_xml(doc, 'Status', uris.DCIM_LCService).text
+
+	return(lc_status)
+
     def set_admin_password(self, password):
 	"""
 	"""

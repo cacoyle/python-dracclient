@@ -78,3 +78,6 @@ DCIM_SystemView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 
 DCIM_VirtualDiskView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                         'DCIM_VirtualDiskView')
+
+DCIM_LCService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
+                  'DCIM_LCService')

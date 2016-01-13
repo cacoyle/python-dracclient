@@ -15,6 +15,9 @@
 Common functionalities shared between different DRAC modules.
 """
 
+import logging
+LOG = logging.getLogger(__name__)
+
 NS_XMLSchema_Instance = 'http://www.w3.org/2001/XMLSchema-instance'
 
 # ReturnValue constants
@@ -56,6 +59,11 @@ def get_wsman_resource_attr(doc, resource_uri, attr_name, nullable=False, find_a
     :returns: value of the attribute
     """
     item = find_xml(doc, attr_name, resource_uri, find_all)
+
+    # If no items were found, log a warning and return empty list
+    if len(item) == 0:
+	LOG.warn("Did not find any %s items" % attr_name)
+	return([])
 
     if find_all:
 	if len(item) == 1:

@@ -440,6 +440,10 @@ class DRACClient(object):
     def get_bios_setting(self, namespace, setting):
 	return self._bios_cfg.get_bios_setting(namespace, setting)
 
+    def get_ilm_status(self):
+        return lifecycle_controller.LifecycleControllerManagement(
+            self.client).get_status()
+
 class WSManClient(wsman.Client):
     """Wrapper for wsman.Client with return value checking"""
 
