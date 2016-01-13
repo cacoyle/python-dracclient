@@ -61,7 +61,7 @@ def get_wsman_resource_attr(doc, resource_uri, attr_name, nullable=False, find_a
     item = find_xml(doc, attr_name, resource_uri, find_all)
 
     # If no items were found, log a warning and return empty list
-    if len(item) == 0:
+    if item is None:
 	LOG.warn("Did not find any %s items" % attr_name)
 	return([])
 
