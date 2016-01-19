@@ -65,9 +65,6 @@ def get_wsman_resource_attr(doc, resource_uri, attr_name, nullable=False, find_a
 	LOG.warn("Did not find any %s items" % attr_name)
 	return([])
 
-    if not hasattr(item.text, 'strip'):
-	return(None)
-
     if find_all:
 	if len(item) == 1:
 	    return item.pop().text.strip()
