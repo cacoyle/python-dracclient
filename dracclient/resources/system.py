@@ -19,7 +19,7 @@ from dracclient import utils
 
 System = collections.namedtuple(
     'System',
-    ['bios_version', 'express_service_tag', 'hostname', 'ilm_version', 'model', 'generation', 'service_tag', 'status' ])
+    ['bios_version', 'express_service_tag', 'ilm_version', 'model', 'generation', 'service_tag', 'status' ])
 
 Primary_Status = {
 	"0": "Unknown",
@@ -77,7 +77,7 @@ class SystemInfo(object):
 	    bios_version=self._get_system_info_attr(system_info, 'BIOSVersionString'),
 	    express_service_tag=self._get_system_info_attr(system_info, 'ExpressServiceCode'),
 	    ilm_version=self._get_system_info_attr(system_info, 'LifecycleControllerVersion'),
-	    hostname=self._get_system_info_attr(system_info, 'HostName'),
+	    #hostname=self._get_system_info_attr(system_info, 'HostName'),
             model=self._get_system_info_attr(system_info, 'Model'),
 	    #generation=self._get_system_info_attr(system_info, 'SystemGeneration'),
 	    generation=generation,
