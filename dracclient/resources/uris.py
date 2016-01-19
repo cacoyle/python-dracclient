@@ -76,6 +76,9 @@ DCIM_RAIDService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 DCIM_SystemView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                    'DCIM_SystemView')
 
+DCIM_SystemManagementService = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/root/dcim/'
+				'DCIM_SystemManagementService')
+
 DCIM_VirtualDiskView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
                         'DCIM_VirtualDiskView')
 

@@ -416,6 +416,12 @@ class DRACClient(object):
     def system_info(self):
         return self._sys_mgmt.get_system_info()
 
+    def enable_system_led(self):
+        return self._sys_mgmt.enable_system_led()
+
+    def disable_system_led(self):
+        return self._sys_mgmt.disable_system_led()
+
     def list_cpus(self):
 	return self._cpu_mgmt.list_cpus()
 

@@ -21,6 +21,20 @@ System = collections.namedtuple(
     'System',
     ['id', 'model', 'generation', 'servicetag' ])
 
+LED_Selectors = {
+	'SystemCreationClassName': 'DCIM_ComputerSystem',
+	'SystemName': 'srv:system',
+	'CreationClassName': 'DCIM_SystemManagementService',
+	'Name': 'DCIM:SystemManagementService'
+}
+
+#LED_Selectors = {
+#	'CreationClassName': 'DCIM_SystemManagementService',
+#	'Name': 'DCIM:SystemManagementService',
+#	'SystemCreationClassName': 'DCICM_ComputerSystem',
+#	'SystemName': 'srv:system'
+#}
+
 class SystemInfo(object):
 
     def __init__(self, client):
@@ -59,3 +73,11 @@ class SystemInfo(object):
     def _get_system_info_attr(self, system_info, attr_name):
         return utils.get_wsman_resource_attr(
             system_info, uris.DCIM_SystemView, attr_name)
+
+    def enable_system_led(self):
+        self.client.invoke(uris.DCIM_SystemManagementService, 'IdentifyChassis',
+		LED_Selectors, {"IdentifyState": "1"})
+
+    def disable_system_led(self):
+        self.client.invoke(uris.DCIM_SystemManagementService, 'IdentifyChassis',
+		LED_Selectors, {"IdentifyState": "0"})
