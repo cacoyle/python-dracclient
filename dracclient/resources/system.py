@@ -69,13 +69,18 @@ class SystemInfo(object):
 	return self._parse_system_info(system_info[0])
 
     def _parse_system_info(self, system_info):
+
+	generation = self._get_system_info_attr(system_info, 'SystemGeneration')
+	generation = int(''.join(e for e in generation if e.isdigit()))
+
 	return System(
 	    bios_version=self._get_system_info_attr(system_info, 'BIOSVersionString'),
 	    express_service_tag=self._get_system_info_attr(system_info, 'ExpressServiceCode'),
 	    ilm_version=self._get_system_info_attr(system_info, 'LifecycleControllerVersion'),
 	    hostname=self._get_system_info_attr(system_info, 'HostName'),
             model=self._get_system_info_attr(system_info, 'Model'),
-            generation=self._get_system_info_attr(system_info, 'SystemGeneration'),
+	    #generation=self._get_system_info_attr(system_info, 'SystemGeneration'),
+	    generation=generation,
             service_tag=self._get_system_info_attr(system_info, 'ServiceTag'),
 	    status=Primary_Status[self._get_system_info_attr(system_info, 'PrimaryStatus')]
 	)
