@@ -19,7 +19,14 @@ from dracclient import utils
 
 System = collections.namedtuple(
     'System',
-    ['id', 'model', 'generation', 'servicetag' ])
+    ['bios_version', 'express_service_tag', 'hostname', 'ilm_version', 'model', 'generation', 'service_tag', 'status' ])
+
+Primary_Status = {
+	"0": "Unknown",
+	"1": "OK",
+	"2": "Degraded",
+	"3": "Error"
+}
 
 LED_Selectors = {
 	'SystemCreationClassName': 'DCIM_ComputerSystem',
@@ -63,12 +70,15 @@ class SystemInfo(object):
 
     def _parse_system_info(self, system_info):
 	return System(
-	    id=self._get_system_info_attr(system_info, 'HostName'),
+	    bios_version=self._get_system_info_attr(system_info, 'BIOSVersionString'),
+	    express_service_tag=self._get_system_info_attr(system_info, 'ExpressServiceCode'),
+	    ilm_version=self._get_system_info_attr(system_info, 'LifecycleControllerVersion'),
+	    hostname=self._get_system_info_attr(system_info, 'HostName'),
             model=self._get_system_info_attr(system_info, 'Model'),
-            generation=self._get_system_info_attr(system_info,
-                'SystemGeneration'),
-            servicetag=self._get_system_info_attr(system_info,
-                'ServiceTag'))
+            generation=self._get_system_info_attr(system_info, 'SystemGeneration'),
+            service_tag=self._get_system_info_attr(system_info, 'ServiceTag'),
+	    status=Primary_Status[self._get_system_info_attr(system_info, 'PrimaryStatus')]
+	)
 
     def _get_system_info_attr(self, system_info, attr_name):
         return utils.get_wsman_resource_attr(
