@@ -66,7 +66,6 @@ class Client(object):
                 # TODO(ifarkas): enable cert verification
                 verify=False)
         except requests.exceptions.RequestException as e:
-	    print " *** %s *** " % __name__
             LOG.exception('Request failed')
             raise exceptions.WSManRequestFailure(drac_error=e.message)
 

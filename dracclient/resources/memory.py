@@ -13,13 +13,13 @@
 
 import collections
 
-from dracclient import exceptions
 from dracclient.resources import uris
 from dracclient import utils
 
 Memory = collections.namedtuple(
     'Memory',
     ['id', 'size'])
+
 
 class MemoryManagement(object):
 
@@ -37,22 +37,28 @@ class MemoryManagement(object):
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
         :raises: DRACOperationFailed on error reported back by the DRAC
-	"""
+        """
 
         doc = self.client.enumerate(uris.DCIM_MemoryView)
 
-	installed_memory = utils.find_xml(doc, 'DCIM_MemoryView',
+        installed_memory = utils.find_xml(doc, 'DCIM_MemoryView',
                                           uris.DCIM_MemoryView,
                                           find_all=True)
 
-	return [self._parse_memory(memory)
-		for memory in installed_memory]
+        return [self._parse_memory(memory) for memory in installed_memory]
 
     def _parse_memory(self, memory):
-	return Memory(
-	    id=self._get_memory_attr(memory, 'FQDD'),
-            size=self._get_memory_attr(memory, 'Size'))
+        """Put something here
+
+        """
+
+        return Memory(id=self._get_memory_attr(memory, 'FQDD'),
+                      size=self._get_memory_attr(memory, 'Size'))
 
     def _get_memory_attr(self, memory, attr_name):
-        return utils.get_wsman_resource_attr(
-            memory, uris.DCIM_MemoryView, attr_name)
+        """Put something here
+
+        """
+
+        return utils.get_wsman_resource_attr(memory, uris.DCIM_MemoryView,
+                                             attr_name)

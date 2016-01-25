@@ -45,7 +45,8 @@ WSManEnumerations = {
 
 BIOSEnumerations = {
     uris.DCIM_BIOSEnumeration: {
-        'ok': load_wsman_xml('bios_enumeration-enum-ok')
+        'ok': load_wsman_xml('bios_enumeration-enum-ok'),
+        'profile': load_wsman_xml('bios-setting-powerprofile')
     },
     uris.DCIM_BIOSInteger: {
         'mutable': load_wsman_xml('bios_integer-enum-mutable'),
@@ -125,6 +126,9 @@ LifecycleControllerEnumerations = {
     uris.DCIM_SystemView: {
         'ok': load_wsman_xml('system_view-enum-ok')
     },
+    uris.DCIM_LCService: {
+        'ok': load_wsman_xml('lifecycle-get-ilm-status-ok')
+    }
 }
 
 RAIDEnumerations = {
@@ -153,5 +157,51 @@ RAIDInvocations = {
             'error': load_wsman_xml(
                 'raid_service-invoke-delete_virtual_disk-error'),
         }
+    }
+}
+
+NICEnumerations = {
+    uris.DCIM_NICView: {
+        'ok': load_wsman_xml('nic-enumeration-enum-ok')
+    }
+}
+
+CPUEnumerations = {
+    uris.DCIM_CPUView: {
+        'ok': load_wsman_xml('cpu-enumeration-enum-ok')
+    }
+}
+
+MemoryEnumerations = {
+    uris.DCIM_MemoryView: {
+        'ok': load_wsman_xml('mem-enumeration-enum-ok')
+    }
+}
+
+SystemView = {
+    uris.DCIM_SystemView: {
+        'ok': load_wsman_xml('system-info-enum-ok')
+    }
+}
+
+SystemView = {
+    uris.DCIM_SystemView: {
+        'ok': load_wsman_xml('system-info-enum-ok')
+    },
+    uris.DCIM_SystemManagementService: {
+        'ok': load_wsman_xml('system-led-invoke-ok')
+    }
+}
+
+OSDeploymentService = {
+    uris.DCIM_OSDeploymentService: {
+        'ok': load_wsman_xml('bios-one-time-boot-ok')
+    }
+}
+
+iDRACCardService = {
+    uris.DCIM_iDRACCardService: {
+        'pw_ok': load_wsman_xml('lifecycle-admin-password-ok'),
+        'list': load_wsman_xml('lifecycle-list-remote-services-ok')
     }
 }

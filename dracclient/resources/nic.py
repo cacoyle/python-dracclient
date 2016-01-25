@@ -13,13 +13,13 @@
 
 import collections
 
-from dracclient import exceptions
 from dracclient.resources import uris
 from dracclient import utils
 
 NetworkInterface = collections.namedtuple(
     'NetworkInterface',
     ['id', 'mac'])
+
 
 class NICManagement(object):
 
@@ -37,23 +37,31 @@ class NICManagement(object):
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
         :raises: DRACOperationFailed on error reported back by the DRAC
-	"""
+        """
 
         doc = self.client.enumerate(uris.DCIM_NICView)
 
-	network_interfaces = utils.find_xml(doc, 'DCIM_NICView',
+        network_interfaces = utils.find_xml(doc, 'DCIM_NICView',
                                             uris.DCIM_NICView,
                                             find_all=True)
 
-	return [self._parse_network_interfaces(network_interface)
-		for network_interface in network_interfaces]
+        return [self._parse_network_interfaces(network_interface)
+                for network_interface in network_interfaces]
 
     def _parse_network_interfaces(self, network_interface):
-	return NetworkInterface(
-	    id=self._get_network_interface_attr(network_interface, 'FQDD'),
-            mac=self._get_network_interface_attr(
-                network_interface, 'PermanentMACAddress'))
+        """Put something here
+
+        """
+
+        return NetworkInterface(
+            id=self._get_network_interface_attr(network_interface, 'FQDD'),
+            mac=self._get_network_interface_attr(network_interface,
+                                                 'PermanentMACAddress'))
 
     def _get_network_interface_attr(self, network_interface, attr_name):
+        """Put something here
+
+        """
+
         return utils.get_wsman_resource_attr(
             network_interface, uris.DCIM_NICView, attr_name)

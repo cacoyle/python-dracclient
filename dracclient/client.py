@@ -56,10 +56,10 @@ class DRACClient(object):
         self._boot_mgmt = bios.BootManagement(self.client)
         self._bios_cfg = bios.BIOSConfiguration(self.client)
         self._raid_mgmt = raid.RAIDManagement(self.client)
-	self._nic_mgmt = nic.NICManagement(self.client)
-	self._sys_mgmt = system.SystemInfo(self.client)
-	self._cpu_mgmt = cpu.CPUManagement(self.client)
-	self._mem_mgmt = memory.MemoryManagement(self.client)
+        self._nic_mgmt = nic.NICManagement(self.client)
+        self._sys_mgmt = system.SystemInfo(self.client)
+        self._cpu_mgmt = cpu.CPUManagement(self.client)
+        self._mem_mgmt = memory.MemoryManagement(self.client)
 
     def get_power_state(self):
         """Returns the current power state of the node
@@ -411,44 +411,142 @@ class DRACClient(object):
             cim_name='DCIM:RAIDService', target=raid_controller)
 
     def list_network_interfaces(self):
-	return self._nic_mgmt.list_network_interfaces()
+        """Returns the list of network interfaces
+
+        :returns: a list of NetworkInterface objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+        return self._nic_mgmt.list_network_interfaces()
 
     def system_info(self):
+        """Returns general information about the iDRAC
+
+        :returns: a System object
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
         return self._sys_mgmt.get_system_info()
 
     def enable_system_led(self):
+        """Enables the system ID LED
+
+        :returns: nothing
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
         return self._sys_mgmt.enable_system_led()
 
     def disable_system_led(self):
+        """Disables the system ID LED
+
+        :returns: nothing
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
         return self._sys_mgmt.disable_system_led()
 
     def list_cpus(self):
-	return self._cpu_mgmt.list_cpus()
+        """Returns the list of CPUs
+
+        :returns: a list of CPU objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+        return self._cpu_mgmt.list_cpus()
 
     def list_memory(self):
-	return self._mem_mgmt.list_memory()
+        """Returns the list of installed memory
+
+        :returns: a list of Memory objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+        return self._mem_mgmt.list_memory()
 
     def one_time_boot(self, boot_source):
+        """Performs a one-time boot of the system
+
+        :returns: nothing
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+        :raises: InvalidParameterValue on invalid boot source
+                 interface
+        """
         return self._boot_mgmt.one_time_boot(boot_source)
 
     def set_admin_password(self, password):
+        """Sets the admin account password
+
+        :returns: nothing
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).set_admin_password(password)
 
     def list_remote_services(self):
+        """Lists the available remote services
+
+        :returns: a ditionary of remote services and their status (True/False)
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).list_remote_services()
 
     def set_remote_services(self, settings):
+        """Sets the status of remote services
+
+        :returns: nothing
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).set_remote_services(settings)
 
-    def get_bios_setting(self, namespace, setting):
-	return self._bios_cfg.get_bios_setting(namespace, setting)
+    def get_bios_setting(self, setting):
+        """Gets a single bios setting value
+
+        :returns: a dictionary containing the requested setting and value
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
+        return self._bios_cfg.get_bios_setting(setting)
 
     def get_ilm_status(self):
+        """Gets the current status of the remote DRAC service
+
+        :returns: a string containing the status of the remote DRAC service
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
+        """
         return lifecycle_controller.LifecycleControllerManagement(
-            self.client).get_status()
+            self.client).get_ilm_status()
+
 
 class WSManClient(wsman.Client):
     """Wrapper for wsman.Client with return value checking"""

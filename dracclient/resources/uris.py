@@ -16,71 +16,50 @@ Schema definitions and resource URIs for the classes implemented by the DRAC
 WS-Man API.
 """
 
-DCIM_BIOSEnumeration = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                        'DCIM_BIOSEnumeration')
+DCIM_BASE = 'http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
 
-DCIM_BIOSInteger = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                    'DCIM_BIOSInteger')
+DCIM_BIOSEnumeration = DCIM_BASE+'DCIM_BIOSEnumeration'
 
-DCIM_BIOSService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                    'DCIM_BIOSService')
+DCIM_BIOSInteger = DCIM_BASE+'DCIM_BIOSInteger'
 
-DCIM_BIOSString = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                   'DCIM_BIOSString')
+DCIM_BIOSService = DCIM_BASE+'DCIM_BIOSService'
 
-DCIM_BootConfigSetting = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                          'DCIM_BootConfigSetting')
+DCIM_BIOSString = DCIM_BASE+'DCIM_BIOSString'
 
-DCIM_BootSourceSetting = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                          'DCIM_BootSourceSetting')
+DCIM_BootConfigSetting = DCIM_BASE+'DCIM_BootConfigSetting'
 
-DCIM_ComputerSystem = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2'
-                       '/DCIM_ComputerSystem')
+DCIM_BootSourceSetting = DCIM_BASE+'DCIM_BootSourceSetting'
 
-DCIM_ControllerView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                       'DCIM_ControllerView')
+DCIM_ComputerSystem = DCIM_BASE+'DCIM_ComputerSystem'
 
-DCIM_CPUView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-               'DCIM_CPUView')
+DCIM_ControllerView = DCIM_BASE+'DCIM_ControllerView'
 
-DCIM_iDRACCardEnumeration = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-               'DCIM_iDRACCardEnumeration')
+DCIM_CPUView = DCIM_BASE+'DCIM_CPUView'
 
-DCIM_iDRACCardService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-               'DCIM_iDRACCardService')
+DCIM_iDRACCardEnumeration = DCIM_BASE+'DCIM_iDRACCardEnumeration'
 
-DCIM_iDRACCardString = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-               'DCIM_iDRACCardString')
+DCIM_iDRACCardService = DCIM_BASE+'DCIM_iDRACCardService'
 
-DCIM_iDRACCardInteger = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-               'DCIM_iDRACCardInteger')
+DCIM_iDRACCardString = DCIM_BASE+'DCIM_iDRACCardString'
 
-DCIM_LifecycleJob = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                     'DCIM_LifecycleJob')
+DCIM_iDRACCardInteger = DCIM_BASE+'DCIM_iDRACCardInteger'
 
-DCIM_MemoryView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                   'DCIM_MemoryView')
+DCIM_LCService = DCIM_BASE+'DCIM_LCService'
 
-DCIM_NICView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                'DCIM_NICView')
+DCIM_LifecycleJob = DCIM_BASE+'DCIM_LifecycleJob'
 
-DCIM_OSDeploymentService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                            'DCIM_OSDeploymentService')
+DCIM_MemoryView = DCIM_BASE+'DCIM_MemoryView'
 
-DCIM_PhysicalDiskView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                         'DCIM_PhysicalDiskView')
+DCIM_NICView = DCIM_BASE+'DCIM_NICView'
 
-DCIM_RAIDService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                    'DCIM_RAIDService')
+DCIM_OSDeploymentService = DCIM_BASE+'DCIM_OSDeploymentService'
 
-DCIM_SystemView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                   'DCIM_SystemView')
+DCIM_PhysicalDiskView = DCIM_BASE+'DCIM_PhysicalDiskView'
 
-DCIM_SystemManagementService = ('http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/root/dcim/'
-				'DCIM_SystemManagementService')
+DCIM_RAIDService = DCIM_BASE+'DCIM_RAIDService'
 
-DCIM_VirtualDiskView = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                        'DCIM_VirtualDiskView')
+DCIM_SystemView = DCIM_BASE+'DCIM_SystemView'
 
-DCIM_LCService = ('http://schemas.dell.com/wbem/wscim/1/cim-schema/2/'
-                  'DCIM_LCService')
+DCIM_SystemManagementService = DCIM_BASE+'DCIM_SystemManagementService'
+
+DCIM_VirtualDiskView = DCIM_BASE+'DCIM_VirtualDiskView'

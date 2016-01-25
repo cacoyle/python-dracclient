@@ -1,0 +1,24 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" 
+    xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" 
+    xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" 
+    xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" 
+    xmlns:n1="http://schemas.dell.com/wbem/wscim/1/cim-schema/2/DCIM_BIOSEnumeration">
+    <s:Header>
+        <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+        <wsa:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse</wsa:Action>
+        <wsa:RelatesTo>uuid:87407c82-7947-41e5-942b-323b70cc8f64</wsa:RelatesTo>
+        <wsa:MessageID>uuid:61cf22ce-29df-19df-95a0-f148d4fe83b0</wsa:MessageID>
+    </s:Header>
+    <s:Body>
+        <wsen:EnumerateResponse>
+            <wsman:Items>
+                <n1:DCIM_BIOSEnumeration>
+                <n1:CurrentValue>PerfOptimized</n1:CurrentValue>
+                <n1:InstanceID>BIOS.Setup.1-1:SysProfile</n1:InstanceID>
+                </n1:DCIM_BIOSEnumeration>
+            </wsman:Items>
+        <wsen:EnumerationContext/>
+        <wsman:EndOfSequence/>
+        </wsen:EnumerateResponse>
+    </s:Body>
+</s:Envelope>

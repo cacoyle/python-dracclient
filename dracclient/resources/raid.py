@@ -78,13 +78,14 @@ PhysicalDisk = collections.namedtuple(
      'firmware_version', 'state', 'raid_state'])
 
 RAIDController = collections.namedtuple(
-    'RAIDController', ['id', 'description', 'manufacturer', 'model',
-                       'firmware_version'])
+    'RAIDController',
+    ['id', 'description', 'manufacturer', 'model', 'firmware_version'])
 
 VirtualDisk = collections.namedtuple(
     'VirtualDisk',
-    ['id', 'name', 'description', 'controller', 'physical_disks', 'raid_level', 'size_mb',
-     'state', 'raid_state', 'span_depth', 'span_length', 'pending_operations'])
+    ['id', 'name', 'description', 'controller', 'physical_disks', 'raid_level',
+     'size_mb', 'state', 'raid_state', 'span_depth', 'span_length',
+     'pending_operations'])
 
 
 class RAIDManagement(object):
@@ -159,15 +160,14 @@ class RAIDManagement(object):
         drac_pending_operations = self._get_virtual_disk_attr(
             drac_disk, 'PendingOperations')
 
-	self._get_virtual_disk_attr(drac_disk, "PhysicalDiskIDs")
-
         return VirtualDisk(
             id=fqdd,
             name=self._get_virtual_disk_attr(drac_disk, 'Name'),
             description=self._get_virtual_disk_attr(drac_disk,
                                                     'DeviceDescription'),
             controller=fqdd.split(':')[1],
-	    physical_disks=self._get_virtual_disk_attr(drac_disk, 'PhysicalDiskIDs'),
+            physical_disks=self._get_virtual_disk_attr(drac_disk,
+                                                       'PhysicalDiskIDs'),
             raid_level=REVERSE_RAID_LEVELS[drac_raid_level],
             size_mb=int(size_b) / 2 ** 20,
             state=DISK_STATUS[drac_status],
@@ -178,7 +178,6 @@ class RAIDManagement(object):
                                                         'SpanLength')),
             pending_operations=(
                 VIRTUAL_DISK_PENDING_OPERATIONS[drac_pending_operations]))
-
 
     def _get_virtual_disk_attr(self, drac_disk, attr_name):
         return utils.get_wsman_resource_attr(

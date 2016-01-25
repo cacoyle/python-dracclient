@@ -20,9 +20,13 @@ import requests_mock
 import dracclient.client
 from dracclient import exceptions
 from dracclient.resources import bios
+from dracclient.resources import cpu
 import dracclient.resources.job
 from dracclient.resources import lifecycle_controller
+from dracclient.resources import memory
+from dracclient.resources import nic
 from dracclient.resources import raid
+from dracclient.resources import system
 from dracclient.resources import uris
 from dracclient.tests import base
 from dracclient.tests import utils as test_utils
@@ -395,6 +399,38 @@ class ClientBIOSConfigurationTestCase(base.BaseTest):
             exceptions.DRACOperationFailed, re.escape(expected_message),
             self.drac_client.set_bios_settings, {'Proc1NumCores': -42})
 
+    @requests_mock.Mocker()
+    def test_one_time_boot(self, mock_requests):
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.OSDeploymentService[
+                uris.DCIM_OSDeploymentService]['ok'])
+
+        self.assertEqual(self.drac_client.one_time_boot('BootToHD'), None)
+
+    @requests_mock.Mocker()
+    def test_one_time_boot_invalid(self, mock_requests):
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.OSDeploymentService[
+                uris.DCIM_OSDeploymentService]['ok'])
+
+        with self.assertRaises(exceptions.InvalidParameterValue):
+            self.drac_client.one_time_boot('BootToFoo')
+
+    @requests_mock.Mocker()
+    def test_get_bios_setting(self, mock_requests):
+        expected_value = {'SysProfile': 'PerfOptimized'}
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.BIOSEnumerations[
+                uris.DCIM_BIOSEnumeration]['profile'])
+
+        self.assertEqual(
+            self.drac_client.get_bios_setting('SysProfile'),
+            expected_value)
+
 
 class ClientJobManagementTestCase(base.BaseTest):
 
@@ -632,6 +668,61 @@ class ClientLifecycleControllerManagementTestCase(base.BaseTest):
 
         self.assertEqual((2, 1, 0), version)
 
+    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+                       spec_set=True, autospec=True)
+    def test_set_lifecycle_admin_password(self, mock_invoke):
+
+        mock_invoke.return_value = lxml.etree.fromstring(
+            test_utils.iDRACCardService[uris.DCIM_iDRACCardService]['pw_ok'])
+
+        self.assertEqual(self.drac_client.set_admin_password('foobar'), None)
+
+    @requests_mock.Mocker()
+    def test_list_lifecycle_services(self, mock_requests):
+
+        expected_services = [
+            lifecycle_controller.DRACRemoteService(name='ipmi', enabled=False),
+            lifecycle_controller.DRACRemoteService(
+                name='telnet',
+                enabled=False),
+            lifecycle_controller.DRACRemoteService(name='ssh', enabled=False),
+            lifecycle_controller.DRACRemoteService(name='web', enabled=True),
+            lifecycle_controller.DRACRemoteService(
+                name='racadm',
+                enabled=False),
+            lifecycle_controller.DRACRemoteService(name='snmp', enabled=False),
+            lifecycle_controller.DRACRemoteService(name='vnc', enabled=True)]
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.iDRACCardService[uris.DCIM_iDRACCardService][
+                'list'])
+
+        self.assertEqual(
+            self.drac_client.list_remote_services(),
+            expected_services)
+
+    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+                       spec_set=True, autospec=True)
+    def test_set_lifecycle_services(self, mock_invoke):
+        services = {
+            'vnc': False,
+            'ssh': True
+        }
+        mock_invoke.return_value = lxml.etree.fromstring(
+            test_utils.iDRACCardService[uris.DCIM_iDRACCardService]['pw_ok'])
+
+        self.assertEqual(self.drac_client.set_remote_services(services), None)
+
+    @requests_mock.Mocker()
+    def test_get_ilm_status(self, mock_requests):
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.LifecycleControllerEnumerations[
+                uris.DCIM_LCService]['ok'])
+
+        self.assertEqual(self.drac_client.get_ilm_status(), 'Ready')
+
 
 @requests_mock.Mocker()
 class ClientRAIDManagementTestCase(base.BaseTest):
@@ -657,6 +748,11 @@ class ClientRAIDManagementTestCase(base.BaseTest):
                       self.drac_client.list_raid_controllers())
 
     def test_list_virtual_disks(self, mock_requests):
+        physical_disk = [
+            'Disk.Bay.0:Enclosure.Internal.0-1:RAID.Integrated.1-1',
+            'Disk.Bay.1:Enclosure.Internal.0-1:RAID.Integrated.1-1'
+        ]
+
         expected_virtual_disk = raid.VirtualDisk(
             id='Disk.Virtual.0:RAID.Integrated.1-1',
             name='disk 0',
@@ -668,7 +764,9 @@ class ClientRAIDManagementTestCase(base.BaseTest):
             raid_state='online',
             span_depth=1,
             span_length=2,
-            pending_operations=None)
+            pending_operations=None,
+            physical_disks=physical_disk
+            )
 
         mock_requests.post(
             'https://1.2.3.4:443/wsman',
@@ -952,3 +1050,140 @@ class WSManClientTestCase(base.BaseTest):
         self.assertRaises(exceptions.DRACUnexpectedReturnValue, client.invoke,
                           'http://resource', 'Foo',
                           expected_return_value='4242')
+
+
+@requests_mock.Mocker()
+class ClientNICTestCase(base.BaseTest):
+
+    def setUp(self):
+        super(ClientNICTestCase, self).setUp()
+        self.drac_client = dracclient.client.DRACClient(
+            **test_utils.FAKE_ENDPOINT)
+
+    def test_list_nics(self, mock_requests):
+        expected_nic = [nic.NetworkInterface(
+            id='NIC.Integrated.1-3-1',
+            mac='B8:2A:72:E1:05:74')]
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.NICEnumerations[uris.DCIM_NICView]['ok'])
+
+        self.assertEqual(
+            expected_nic,
+            self.drac_client.list_network_interfaces())
+
+
+@requests_mock.Mocker()
+class ClientCPUTestCase(base.BaseTest):
+
+    def setUp(self):
+        super(ClientCPUTestCase, self).setUp()
+        self.drac_client = dracclient.client.DRACClient(
+            **test_utils.FAKE_ENDPOINT)
+
+    def test_list_cpus(self, mock_requests):
+        expected_cpu = [cpu.CPU(
+            id='CPU.Socket.1',
+            cores='6')]
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.CPUEnumerations[uris.DCIM_CPUView]['ok'])
+
+        self.assertEqual(
+            expected_cpu,
+            self.drac_client.list_cpus())
+
+
+@requests_mock.Mocker()
+class ClientMemTestCase(base.BaseTest):
+
+    def setUp(self):
+        super(ClientMemTestCase, self).setUp()
+        self.drac_client = dracclient.client.DRACClient(
+            **test_utils.FAKE_ENDPOINT)
+
+    def test_list_memory(self, mock_requests):
+        expected_mem = [memory.Memory(
+            id='DIMM.Socket.A1',
+            size='16384')]
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.MemoryEnumerations[uris.DCIM_MemoryView]['ok'])
+
+        self.assertEqual(
+            expected_mem,
+            self.drac_client.list_memory())
+
+
+@requests_mock.Mocker()
+class ClientSystemTestCase(base.BaseTest):
+
+    def setUp(self):
+        super(ClientSystemTestCase, self).setUp()
+        self.drac_client = dracclient.client.DRACClient(
+            **test_utils.FAKE_ENDPOINT)
+
+    def test_system_info(self, mock_requests):
+        expected_info = system.System(
+            bios_version='1.3.6',
+            express_service_tag='0000000000',
+            ilm_version='2.21.21.21',
+            model='PowerEdge R730xd',
+            generation='13G Monolithic',
+            service_tag='000000',
+            status='Unknown')
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.SystemView[uris.DCIM_SystemView]['ok'])
+
+        self.assertEqual(
+            expected_info,
+            self.drac_client.system_info())
+
+    @mock.patch.object(lifecycle_controller.LifecycleControllerManagement,
+                       'get_version', spec_set=True, autospec=True)
+    def test_enable_system_led(self, mock_requests, *args):
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.SystemView[
+                uris.DCIM_SystemManagementService]['ok'])
+
+        self.assertEqual(self.drac_client.enable_system_led(), None)
+
+    @mock.patch.object(lifecycle_controller.LifecycleControllerManagement,
+                       'get_version', return_value=(2, 21, 21, 21))
+    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+                       spec_set=True, autospec=True)
+    def test_enable_system_led_12g(self, mock_invoke, *args):
+
+        mock_invoke.return_value = lxml.etree.fromstring(
+            test_utils.SystemView[uris.DCIM_SystemManagementService]['ok'])
+
+        self.assertEqual(self.drac_client.enable_system_led(), None)
+
+    @mock.patch.object(lifecycle_controller.LifecycleControllerManagement,
+                       'get_version', spec_set=True, autospec=True)
+    def test_disable_system_led(self, mock_requests, *args):
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.SystemView[
+                uris.DCIM_SystemManagementService]['ok'])
+
+        self.assertEqual(self.drac_client.disable_system_led(), None)
+
+    @mock.patch.object(lifecycle_controller.LifecycleControllerManagement,
+                       'get_version', return_value=(2, 21, 21, 21))
+    @mock.patch.object(dracclient.client.WSManClient, 'invoke',
+                       spec_set=True, autospec=True)
+    def test_disable_system_led_12g(self, mock_invoke, *args):
+
+        mock_invoke.return_value = lxml.etree.fromstring(
+            test_utils.SystemView[uris.DCIM_SystemManagementService]['ok'])
+
+        self.assertEqual(self.drac_client.disable_system_led(), None)

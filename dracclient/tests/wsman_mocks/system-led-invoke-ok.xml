@@ -1,0 +1,18 @@
+<s:Envelope 
+    xmlns:s="http://www.w3.org/2003/05/soap-envelope" 
+    xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" 
+    xmlns:n1="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/root/dcim/DCIM_SystemManagementService">
+    <s:Header>
+        <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+        <wsa:Action>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/root/dcim/DCIM_SystemManagementService/IdentifyChassisResponse</wsa:Action>
+        <wsa:RelatesTo>uuid:637f5760-293b-40cc-84c9-ec8b67a3b0e8</wsa:RelatesTo>
+        <wsa:MessageID>uuid:98f289be-29de-19de-9455-f148d4fe83b0</wsa:MessageID>
+    </s:Header>
+    <s:Body>
+        <n1:IdentifyChassis_OUTPUT>
+        <n1:Message>The command was successful</n1:Message>
+        <n1:MessageID>SYS001</n1:MessageID>
+        <n1:ReturnValue>0</n1:ReturnValue>
+        </n1:IdentifyChassis_OUTPUT>
+    </s:Body>
+</s:Envelope>

@@ -1,0 +1,18 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" 
+    xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" 
+    xmlns:n1="http://schemas.dell.com/wbem/wscim/1/cim-schema/2/DCIM_LCService">
+    <s:Header>
+        <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+        <wsa:Action>http://schemas.dell.com/wbem/wscim/1/cim-schema/2/DCIM_LCService/GetRSStatusResponse</wsa:Action>
+        <wsa:RelatesTo>uuid:415ae5d7-d5dc-4d66-8223-139d9427e1a2</wsa:RelatesTo>
+        <wsa:MessageID>uuid:d132dd57-29df-19df-9657-f148d4fe83b0</wsa:MessageID>
+    </s:Header>
+    <s:Body>
+        <n1:GetRSStatus_OUTPUT>
+        <n1:Message>The remote service is available</n1:Message>
+        <n1:MessageID>RSI0001</n1:MessageID>
+        <n1:ReturnValue>0</n1:ReturnValue>
+        <n1:Status>Ready</n1:Status>
+        </n1:GetRSStatus_OUTPUT>
+    </s:Body>
+</s:Envelope>

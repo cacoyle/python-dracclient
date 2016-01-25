@@ -47,7 +47,6 @@ LC_CONTROLLER_VERSION_12G = (2, 0, 0)
 
 BootMode = collections.namedtuple('BootMode', ['id', 'name', 'is_current',
                                                'is_next'])
-
 BootDevice = collections.namedtuple(
     'BootDevice',
     ['id',  'boot_mode', 'current_assigned_sequence',
@@ -256,23 +255,28 @@ class BootManagement(object):
         return utils.get_wsman_resource_attr(drac_boot_device,
                                              uris.DCIM_BootSourceSetting,
                                              attr_name)
-    def one_time_boot(self, boot_source):
-	"""
-	"""
-	valid_sources = ('BootToHD', 'BootToPXE')
 
-	if boot_source not in valid_sources:
-	    msg = 'Unknown boot source: %s' % boot_source
+    def one_time_boot(self, boot_source):
+        """Put something here
+
+        """
+
+        valid_sources = ('BootToHD', 'BootToPXE')
+
+        if boot_source not in valid_sources:
+            msg = 'Unknown boot source: %s' % boot_source
             raise exceptions.InvalidParameterValue(reason=msg)
 
         selectors = {
-		"Name": "DCIM:OSDeploymentService",
-		"SystemName": "DCIM:ComputerSystem",
-		"CreationClassName": "DCIM_OSDeploymentService",
-		"SystemCreationClassName": "DCIM_ComputerSystem"
-	}
+            'Name': 'DCIM:OSDeploymentService',
+            'SystemName': 'DCIM:ComputerSystem',
+            'CreationClassName': 'DCIM_OSDeploymentService',
+            'SystemCreationClassName': 'DCIM_ComputerSyste'
+        }
 
-	self.client.invoke(uris.DCIM_OSDeploymentService, boot_source, selectors)
+        self.client.invoke(uris.DCIM_OSDeploymentService, boot_source,
+                           selectors)
+
 
 class BIOSAttribute(object):
     """Generic BIOS attribute class"""
@@ -512,25 +516,26 @@ class BIOSConfiguration(object):
 
         return result
 
-    def get_bios_setting(self, namespace, setting):
-	"""Gets a BIOS configuration value
+    def get_bios_setting(self, setting):
+        """Gets a BIOS configuration value
 
-	:param namespace: the namespace to query for the setting.
-	:param setting: the setting to retrieve the current value for.
-	:returns: a dictionary containing the current value of the
-		requested setting.
-	"""
+        :param namespace: the namespace to query for the setting.
+        :param setting: the setting to retrieve the current value for.
+        :returns: a dictionary containing the current value of the
+        requested setting.
+        """
+        query = "select CurrentValue from DCIM_BIOSEnumeration where" \
+                "InstanceID=BIOS.Setup.1-1:%s"
 
-	result = {}
+        doc = self.client.enumerate(resource_uri=uris.DCIM_BIOSEnumeration,
+                                    filter_query=query % setting)
 
-	doc = self.client.enumerate(
-		resource_uri=namespace,
-		filter_query="select CurrentValue from %s where InstanceID='BIOS.Setup.1-1:%s'" % (namespace.split("/")[-1], setting)
-	)
+        result = utils.get_wsman_resource_attr(doc,
+                                               uris.DCIM_BIOSEnumeration,
+                                               'CurrentValue',
+                                               nullable=False)
 
-	result[setting] = utils.get_wsman_resource_attr(doc, namespace, "CurrentValue", nullable=False)
-
-	return(result)
+        return({setting: result})
 
     def set_bios_settings(self, new_settings):
         """Sets the BIOS configuration

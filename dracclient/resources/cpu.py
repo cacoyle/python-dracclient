@@ -13,13 +13,13 @@
 
 import collections
 
-from dracclient import exceptions
 from dracclient.resources import uris
 from dracclient import utils
 
 CPU = collections.namedtuple(
     'CPU',
     ['id', 'cores'])
+
 
 class CPUManagement(object):
 
@@ -37,21 +37,19 @@ class CPUManagement(object):
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
         :raises: DRACOperationFailed on error reported back by the DRAC
-	"""
+        """
 
         doc = self.client.enumerate(uris.DCIM_CPUView)
 
-	cpus = utils.find_xml(doc, 'DCIM_CPUView',
-                             uris.DCIM_CPUView,
-                             find_all=True)
+        cpus = utils.find_xml(doc, 'DCIM_CPUView',
+                              uris.DCIM_CPUView,
+                              find_all=True)
 
-	return [self._parse_cpus(cpu)
-		for cpu in cpus]
+        return [self._parse_cpus(cpu) for cpu in cpus]
 
     def _parse_cpus(self, cpu):
-	return CPU(
-	    id=self._get_cpu_attr(cpu, 'FQDD'),
-            cores=self._get_cpu_attr(cpu, 'NumberOfProcessorCores'))
+        return CPU(id=self._get_cpu_attr(cpu, 'FQDD'),
+                   cores=self._get_cpu_attr(cpu, 'NumberOfProcessorCores'))
 
     def _get_cpu_attr(self, cpu, attr_name):
         return utils.get_wsman_resource_attr(
