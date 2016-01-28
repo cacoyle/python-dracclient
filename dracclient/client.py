@@ -479,6 +479,7 @@ class DRACClient(object):
     def one_time_boot(self, boot_source):
         """Performs a one-time boot of the system
 
+        :param boot_source: the desired boot source
         :returns: nothing
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
@@ -491,6 +492,8 @@ class DRACClient(object):
     def set_ilm_user_password(self, DRACUser, password):
         """Sets an ilm account password
 
+        :param DRACUser: a DRACUser object representing the userr
+        :param password: the desired new password
         :returns: nothing
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
@@ -515,6 +518,7 @@ class DRACClient(object):
     def set_remote_services(self, settings):
         """Sets the status of remote services
 
+        :param settings: a dictionary of remote services and desired status
         :returns: nothing
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
@@ -527,6 +531,7 @@ class DRACClient(object):
     def get_bios_setting(self, setting):
         """Gets a single bios setting value
 
+        :param setting: The BIOS setting to request
         :returns: a dictionary containing the requested setting and value
         :raises: WSManRequestFailure on request failures
         :raises: WSManInvalidResponse when receiving invalid response
@@ -548,8 +553,12 @@ class DRACClient(object):
             self.client).get_ilm_status()
 
     def list_ilm_users(self):
-        """Put something here
+        """Gets a list of configured ILM users
 
+        :returns: a list of DRACUser objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
         """
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).list_ilm_users()

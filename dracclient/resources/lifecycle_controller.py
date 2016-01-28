@@ -71,7 +71,12 @@ class LifecycleControllerManagement(object):
         return tuple(map(int, (lc_version_str.split('.'))))
 
     def get_ilm_status(self):
-        """Put something here
+        """Returns the status of the remote ILM service
+
+        :returns: a string containing the status of the ILM removte service
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
 
         """
 
@@ -89,8 +94,12 @@ class LifecycleControllerManagement(object):
         return(lc_status)
 
     def list_ilm_users(self):
-        """PUt something here
+        """Gets a list of configured ILM users
 
+        :returns: a list of DRACUser objects
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
         """
 
         results = []
@@ -130,8 +139,15 @@ class LifecycleControllerManagement(object):
         return results
 
     def set_ilm_user_password(self, DRACUser, password):
-        """Put something here
+        """Sets an ilm account password
 
+        :param DRACUser: a DRACUser object representing the userr
+        :param password: the desired new password
+        :returns: nothing
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
         """
 
         selectors = {'Name': 'DCIM:iDRACCardService',
@@ -153,7 +169,13 @@ class LifecycleControllerManagement(object):
                            'CreateTargetedConfigJob', selectors, properties)
 
     def list_remote_services(self):
-        """Put something here
+        """Lists the available remote services
+
+        :returns: a ditionary of remote services and their status (True/False)
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
 
         """
 
@@ -182,8 +204,14 @@ class LifecycleControllerManagement(object):
         return result
 
     def set_remote_services(self, settings):
-        """Put something here
+        """Sets the status of remote services
 
+        :param settings: a dictionary of remote services and desired status
+        :returns: nothing
+        :raises: WSManRequestFailure on request failures
+        :raises: WSManInvalidResponse when receiving invalid response
+        :raises: DRACOperationFailed on error reported back by the DRAC
+                 interface
         """
 
         selectors = {
