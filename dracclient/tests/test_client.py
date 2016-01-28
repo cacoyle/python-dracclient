@@ -668,14 +668,41 @@ class ClientLifecycleControllerManagementTestCase(base.BaseTest):
 
         self.assertEqual((2, 1, 0), version)
 
+    @requests_mock.Mocker()
+    def test_list_ilm_users(self, mock_requests):
+
+        from dracclient.resources.lifecycle_controller import DRACUser
+
+        user = DRACUser(
+            name='root',
+            target='iDRAC.Embedded.1',
+            user_id='Users.2')
+
+        mock_requests.post(
+            'https://1.2.3.4:443/wsman',
+            text=test_utils.iDRACCardService[uris.DCIM_iDRACCardService][
+                'user_list'])
+
+        self.assertEqual(self.drac_client.list_ilm_users().pop(), user)
+
     @mock.patch.object(dracclient.client.WSManClient, 'invoke',
                        spec_set=True, autospec=True)
-    def test_set_lifecycle_admin_password(self, mock_invoke):
+    def test_set_ilm_user_password(self, mock_invoke):
+
+        from dracclient.resources.lifecycle_controller import DRACUser
+
+        user = DRACUser(
+            name='root',
+            target='iDRAC.Embedded.1',
+            user_id='Users.2')
 
         mock_invoke.return_value = lxml.etree.fromstring(
             test_utils.iDRACCardService[uris.DCIM_iDRACCardService]['pw_ok'])
 
-        self.assertEqual(self.drac_client.set_admin_password('foobar'), None)
+        self.assertEqual(self.drac_client.set_ilm_user_password(
+            user,
+            'foobar'),
+            None)
 
     @requests_mock.Mocker()
     def test_list_lifecycle_services(self, mock_requests):

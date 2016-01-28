@@ -488,8 +488,8 @@ class DRACClient(object):
         """
         return self._boot_mgmt.one_time_boot(boot_source)
 
-    def set_admin_password(self, password):
-        """Sets the admin account password
+    def set_ilm_user_password(self, DRACUser, password):
+        """Sets an ilm account password
 
         :returns: nothing
         :raises: WSManRequestFailure on request failures
@@ -498,7 +498,7 @@ class DRACClient(object):
                  interface
         """
         return lifecycle_controller.LifecycleControllerManagement(
-            self.client).set_admin_password(password)
+            self.client).set_ilm_user_password(DRACUser, password)
 
     def list_remote_services(self):
         """Lists the available remote services
@@ -546,6 +546,13 @@ class DRACClient(object):
         """
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).get_ilm_status()
+
+    def list_ilm_users(self):
+        """Put something here
+
+        """
+        return lifecycle_controller.LifecycleControllerManagement(
+            self.client).list_ilm_users()
 
 
 class WSManClient(wsman.Client):

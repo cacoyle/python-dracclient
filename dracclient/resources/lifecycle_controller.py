@@ -32,6 +32,11 @@ REMOTE_SERVICES = {
     'web': 'iDRAC.Embedded.1#WebServer.1#Enable'
 }
 
+DRACUser = collections.namedtuple(
+    'DRACUser',
+    ['name', 'target', 'user_id']
+)
+
 REVERSE_REMOTE_SERVICES = dict((v, k) for (k, v) in REMOTE_SERVICES.items())
 
 
@@ -83,7 +88,48 @@ class LifecycleControllerManagement(object):
 
         return(lc_status)
 
-    def set_admin_password(self, password):
+    def list_ilm_users(self):
+        """PUt something here
+
+        """
+
+        results = []
+
+        filter_query = ('select CurrentValue from DCIM_iDRACCardString where '
+                        'AttributeName = "UserName"')
+
+        doc = self.client.enumerate(
+            uris.DCIM_iDRACCardString,
+            filter_query=filter_query)
+
+        users = utils.find_xml(
+            doc,
+            'DCIM_iDRACCardString',
+            uris.DCIM_iDRACCardString,
+            find_all=True)
+
+        for user in users:
+            name = utils.find_xml(
+                user,
+                'CurrentValue',
+                uris.DCIM_iDRACCardString).text
+
+            if name is None:
+                continue
+
+            instance_id = utils.find_xml(
+                user,
+                'InstanceID',
+                uris.DCIM_iDRACCardString).text
+
+            target = instance_id.split('#')[0]
+            user_id = instance_id.split('#')[1]
+
+            results.append(DRACUser(name=name, target=target, user_id=user_id))
+
+        return results
+
+    def set_ilm_user_password(self, DRACUser, password):
         """Put something here
 
         """
@@ -94,13 +140,13 @@ class LifecycleControllerManagement(object):
                      'SystemCreationClassName': 'DCIM_ComputerSystem'}
 
         properties = {'Target': 'iDRAC.Embedded.1',
-                      'AttributeName': 'Users.2#Password',
+                      'AttributeName': '%s#Password' % DRACUser.user_id,
                       'AttributeValue': password}
 
         self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
                            selectors, properties)
 
-        properties = {'Target': 'iDRAC.Embedded.1',
+        properties = {'Target': DRACUser.target,
                       'ScheduledStartTime': 'TIME_NOW'}
 
         self.client.invoke(uris.DCIM_iDRACCardService,

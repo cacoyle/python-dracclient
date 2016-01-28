@@ -202,6 +202,7 @@ OSDeploymentService = {
 iDRACCardService = {
     uris.DCIM_iDRACCardService: {
         'pw_ok': load_wsman_xml('lifecycle-admin-password-ok'),
-        'list': load_wsman_xml('lifecycle-list-remote-services-ok')
+        'list': load_wsman_xml('lifecycle-list-remote-services-ok'),
+        'user_list': load_wsman_xml('lifecycle-list-users-ok')
     }
 }

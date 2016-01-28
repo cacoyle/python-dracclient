@@ -1,0 +1,69 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+	xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration"
+	xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"
+	xmlns:n1="http://schemas.dell.com/wbem/wscim/1/cim-schema/2/DCIM_iDRACCardString"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<s:Header>
+		<wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse</wsa:Action>
+		<wsa:RelatesTo>uuid:e9f6a88f-5cbc-4ec5-9b3a-933a9fb64d99</wsa:RelatesTo>
+		<wsa:MessageID>uuid:2fa1b8a0-2a6a-1a6a-a4f5-f148d4fe83b0</wsa:MessageID>
+	</s:Header>
+	<s:Body>
+		<wsen:EnumerateResponse>
+		<wsman:Items>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.1#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue>root</n1:CurrentValue>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.2#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.3#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.4#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.5#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.6#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.7#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.8#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.9#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.10#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.11#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.12#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.13#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.14#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.15#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+			<n1:DCIM_iDRACCardString>
+			<n1:CurrentValue xsi:nil="true"/>
+			<n1:InstanceID>iDRAC.Embedded.1#Users.16#UserName</n1:InstanceID></n1:DCIM_iDRACCardString>
+		</wsman:Items>
+		<wsen:EnumerationContext/>
+		<wsman:EndOfSequence/>
+		</wsen:EnumerateResponse>
+	</s:Body>
+</s:Envelope>
