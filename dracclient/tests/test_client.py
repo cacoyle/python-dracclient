@@ -1172,7 +1172,7 @@ class ClientSystemTestCase(base.BaseTest):
             self.drac_client.system_info())
 
     @mock.patch.object(lifecycle_controller.LifecycleControllerManagement,
-                       'get_version', spec_set=True, autospec=True)
+                       'get_version', return_value=(1, 0, 0, 0))
     def test_enable_system_led(self, mock_requests, *args):
 
         mock_requests.post(
@@ -1194,7 +1194,7 @@ class ClientSystemTestCase(base.BaseTest):
         self.assertEqual(self.drac_client.enable_system_led(), None)
 
     @mock.patch.object(lifecycle_controller.LifecycleControllerManagement,
-                       'get_version', spec_set=True, autospec=True)
+                       'get_version', return_value=(1, 0, 0, 0))
     def test_disable_system_led(self, mock_requests, *args):
 
         mock_requests.post(

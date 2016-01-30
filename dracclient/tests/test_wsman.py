@@ -43,16 +43,18 @@ class ClientTestCase(base.BaseTest):
         self.client = dracclient.wsman.Client('malformed://^@*', 'user',
                                               'pass')
 
-        self.assertRaises(exceptions.WSManRequestFailure,
-                          self.client.enumerate, 'resource')
+        with self.assertRaises(exceptions.WSManRequestFailure):
+            self.client.enumerate('resource')
+        # self.assertRaises(exceptions.WSManRequestFailure,
+        #                   self.client.enumerate, 'resource')
 
     @requests_mock.Mocker()
     def test_enumerate_with_invalid_status_code(self, mock_requests):
         mock_requests.post('https://1.2.3.4:443/wsman', status_code=500,
                            reason='dumb request')
 
-        self.assertRaises(exceptions.WSManInvalidResponse,
-                          self.client.enumerate, 'resource')
+        with self.assertRaises(exceptions.WSManInvalidResponse):
+            self.client.enumerate('resource')
 
     @requests_mock.Mocker()
     def test_enumerate_with_auto_pull(self, mock_requests):

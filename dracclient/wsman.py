@@ -67,7 +67,8 @@ class Client(object):
                 verify=False)
         except requests.exceptions.RequestException as e:
             LOG.exception('Request failed')
-            raise exceptions.WSManRequestFailure(drac_error=e.message)
+            message = getattr(e, 'message', e.response)
+            raise exceptions.WSManRequestFailure(drac_error=message)
 
         LOG.debug('Received response from %(endpoint)s: %(payload)s',
                   {'endpoint': self.endpoint, 'payload': resp.content})
