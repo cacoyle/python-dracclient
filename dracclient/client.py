@@ -563,6 +563,26 @@ class DRACClient(object):
         return lifecycle_controller.LifecycleControllerManagement(
             self.client).list_ilm_users()
 
+    def set_idrac_ipv4_dhcp(self, enabled=True):
+        """
+        """
+
+        return lifecycle_controller.LifecycleControllerManagement(
+            self.client).set_idrac_ipv4_dhcp(enabled)
+
+    def set_idrac_static_ipv4(self, address, netmask, gateway):
+        """
+        """
+
+        return lifecycle_controller.LifecycleControllerManagement(
+            self.client).set_idrac_static_ipv4(address, netmask, gateway)
+
+    def set_idrac_name(self, name):
+        """
+        """
+
+        return lifecycle_controller.LifecycleControllerManagement(
+            self.client).set_idrac_name(name)
 
 class WSManClient(wsman.Client):
     """Wrapper for wsman.Client with return value checking"""

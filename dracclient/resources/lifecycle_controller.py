@@ -43,211 +43,311 @@ REVERSE_REMOTE_SERVICES = dict((v, k) for (k, v) in REMOTE_SERVICES.items())
 class LifecycleControllerManagement(object):
 
     def __init__(self, client):
-        """Creates LifecycleControllerManagement object
+	"""Creates LifecycleControllerManagement object
 
-        :param client: an instance of WSManClient
-        """
-        self.client = client
+	:param client: an instance of WSManClient
+	"""
+	self.client = client
 
     def get_version(self):
-        """Returns the Lifecycle controller version
+	"""Returns the Lifecycle controller version
 
-        :returns: Lifecycle controller version as a tuple of integers
-        :raises: WSManRequestFailure on request failures
-        :raises: WSManInvalidResponse when receiving invalid response
-        :raises: DRACOperationFailed on error reported back by the DRAC
-        interface
-        """
+	:returns: Lifecycle controller version as a tuple of integers
+	:raises: WSManRequestFailure on request failures
+	:raises: WSManInvalidResponse when receiving invalid response
+	:raises: DRACOperationFailed on error reported back by the DRAC
+	interface
+	"""
 
-        filter_query = ('select LifecycleControllerVersion '
-                        'from DCIM_SystemView')
+	filter_query = ('select LifecycleControllerVersion '
+			'from DCIM_SystemView')
 
-        doc = self.client.enumerate(uris.DCIM_SystemView,
-                                    filter_query=filter_query)
+	doc = self.client.enumerate(uris.DCIM_SystemView,
+				    filter_query=filter_query)
 
-        lc_version_str = utils.find_xml(doc, 'LifecycleControllerVersion',
-                                        uris.DCIM_SystemView).text
+	lc_version_str = utils.find_xml(doc, 'LifecycleControllerVersion',
+					uris.DCIM_SystemView).text
 
-        return tuple(map(int, (lc_version_str.split('.'))))
+	return tuple(map(int, (lc_version_str.split('.'))))
 
     def get_ilm_status(self):
-        """Returns the status of the remote ILM service
+	"""Returns the status of the remote ILM service
 
-        :returns: a string containing the status of the ILM removte service
-        :raises: WSManRequestFailure on request failures
-        :raises: WSManInvalidResponse when receiving invalid response
-        :raises: DRACOperationFailed on error reported back by the DRAC
+	:returns: a string containing the status of the ILM removte service
+	:raises: WSManRequestFailure on request failures
+	:raises: WSManInvalidResponse when receiving invalid response
+	:raises: DRACOperationFailed on error reported back by the DRAC
 
-        """
+	"""
 
-        selectors = {
-            'Name': 'DCIM:LCService',
-            'SystemName': 'DCIM:ComputerSystem',
-            'CreationClassName': 'DCIM_LCService',
-            'SystemCreationClassName': 'DCIM_ComputerSystem'
-        }
+	selectors = {
+	    'Name': 'DCIM:LCService',
+	    'SystemName': 'DCIM:ComputerSystem',
+	    'CreationClassName': 'DCIM_LCService',
+	    'SystemCreationClassName': 'DCIM_ComputerSystem'
+	}
 
-        doc = self.client.invoke(uris.DCIM_LCService, 'GetRSStatus', selectors)
+	doc = self.client.invoke(uris.DCIM_LCService, 'GetRSStatus', selectors)
 
-        lc_status = utils.find_xml(doc, 'Status', uris.DCIM_LCService).text
+	lc_status = utils.find_xml(doc, 'Status', uris.DCIM_LCService).text
 
-        return(lc_status)
+	return(lc_status)
 
     def list_ilm_users(self):
-        """Gets a list of configured ILM users
+	"""Gets a list of configured ILM users
 
-        :returns: a list of DRACUser objects
-        :raises: WSManRequestFailure on request failures
-        :raises: WSManInvalidResponse when receiving invalid response
-        :raises: DRACOperationFailed on error reported back by the DRAC
-        """
+	:returns: a list of DRACUser objects
+	:raises: WSManRequestFailure on request failures
+	:raises: WSManInvalidResponse when receiving invalid response
+	:raises: DRACOperationFailed on error reported back by the DRAC
+	"""
 
-        results = []
+	results = []
 
-        filter_query = ('select CurrentValue from DCIM_iDRACCardString where '
-                        'AttributeName = "UserName"')
+	filter_query = ('select CurrentValue from DCIM_iDRACCardString where '
+			'AttributeName = "UserName"')
 
-        doc = self.client.enumerate(
-            uris.DCIM_iDRACCardString,
-            filter_query=filter_query)
+	doc = self.client.enumerate(
+	    uris.DCIM_iDRACCardString,
+	    filter_query=filter_query)
 
-        users = utils.find_xml(
-            doc,
-            'DCIM_iDRACCardString',
-            uris.DCIM_iDRACCardString,
-            find_all=True)
+	users = utils.find_xml(
+	    doc,
+	    'DCIM_iDRACCardString',
+	    uris.DCIM_iDRACCardString,
+	    find_all=True)
 
-        for user in users:
-            name = utils.find_xml(
-                user,
-                'CurrentValue',
-                uris.DCIM_iDRACCardString).text
+	for user in users:
+	    name = utils.find_xml(
+		user,
+		'CurrentValue',
+		uris.DCIM_iDRACCardString).text
 
-            if name is None:
-                continue
+	    if name is None:
+		continue
 
-            instance_id = utils.find_xml(
-                user,
-                'InstanceID',
-                uris.DCIM_iDRACCardString).text
+	    instance_id = utils.find_xml(
+		user,
+		'InstanceID',
+		uris.DCIM_iDRACCardString).text
 
-            target = instance_id.split('#')[0]
-            user_id = instance_id.split('#')[1]
+	    target = instance_id.split('#')[0]
+	    user_id = instance_id.split('#')[1]
 
-            results.append(DRACUser(name=name, target=target, user_id=user_id))
+	    results.append(DRACUser(name=name, target=target, user_id=user_id))
 
-        return results
+	return results
 
     def set_ilm_user_password(self, DRACUser, password):
-        """Sets an ilm account password
+	"""Sets an ilm account password
 
-        :param DRACUser: a DRACUser object representing the userr
-        :param password: the desired new password
-        :returns: nothing
-        :raises: WSManRequestFailure on request failures
-        :raises: WSManInvalidResponse when receiving invalid response
-        :raises: DRACOperationFailed on error reported back by the DRAC
-                 interface
-        """
+	:param DRACUser: a DRACUser object representing the userr
+	:param password: the desired new password
+	:returns: nothing
+	:raises: WSManRequestFailure on request failures
+	:raises: WSManInvalidResponse when receiving invalid response
+	:raises: DRACOperationFailed on error reported back by the DRAC
+		 interface
+	"""
 
-        selectors = {'Name': 'DCIM:iDRACCardService',
-                     'SystemName': 'DCIM:ComputerSystem',
-                     'CreationClassName': 'DCIM_iDRACCardService',
-                     'SystemCreationClassName': 'DCIM_ComputerSystem'}
+	selectors = {'Name': 'DCIM:iDRACCardService',
+		     'SystemName': 'DCIM:ComputerSystem',
+		     'CreationClassName': 'DCIM_iDRACCardService',
+		     'SystemCreationClassName': 'DCIM_ComputerSystem'}
 
-        properties = {'Target': 'iDRAC.Embedded.1',
-                      'AttributeName': '%s#Password' % DRACUser.user_id,
-                      'AttributeValue': password}
+	properties = {'Target': 'iDRAC.Embedded.1',
+		      'AttributeName': '%s#Password' % DRACUser.user_id,
+		      'AttributeValue': password}
 
-        self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
-                           selectors, properties)
+	self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+			   selectors, properties)
 
-        properties = {'Target': DRACUser.target,
-                      'ScheduledStartTime': 'TIME_NOW'}
+	properties = {'Target': DRACUser.target,
+		      'ScheduledStartTime': 'TIME_NOW'}
 
-        self.client.invoke(uris.DCIM_iDRACCardService,
-                           'CreateTargetedConfigJob', selectors, properties)
+	self.client.invoke(uris.DCIM_iDRACCardService,
+			   'CreateTargetedConfigJob', selectors, properties)
 
     def list_remote_services(self):
-        """Lists the available remote services
+	"""Lists the available remote services
 
-        :returns: a ditionary of remote services and their status (True/False)
-        :raises: WSManRequestFailure on request failures
-        :raises: WSManInvalidResponse when receiving invalid response
-        :raises: DRACOperationFailed on error reported back by the DRAC
-                 interface
+	:returns: a ditionary of remote services and their status (True/False)
+	:raises: WSManRequestFailure on request failures
+	:raises: WSManInvalidResponse when receiving invalid response
+	:raises: DRACOperationFailed on error reported back by the DRAC
+		 interface
 
-        """
+	"""
 
-        result = []
+	result = []
 
-        namespace = 'DCIM_iDRACCardEnumeration'
+	namespace = 'DCIM_iDRACCardEnumeration'
 
-        q_filter = 'select CurrentValue from %s where %s' % \
-            (namespace, " or ".join(["InstanceID='%s'" %
-             x for x in REMOTE_SERVICES.values()]))
+	q_filter = 'select CurrentValue from %s where %s' % \
+	    (namespace, " or ".join(["InstanceID='%s'" %
+	     x for x in REMOTE_SERVICES.values()]))
 
-        doc = self.client.enumerate(
-            resource_uri=uris.DCIM_iDRACCardEnumeration,
-            filter_query=q_filter
-        )
+	doc = self.client.enumerate(
+	    resource_uri=uris.DCIM_iDRACCardEnumeration,
+	    filter_query=q_filter
+	)
 
-        items = doc.find('.//{%s}Items' % wsman.NS_WSMAN)
-        for item in items:
-            name = utils.find_xml(item, 'InstanceID',
-                                  uris.DCIM_iDRACCardEnumeration).text
-            value = utils.find_xml(item, 'CurrentValue',
-                                   uris.DCIM_iDRACCardEnumeration).text
+	items = doc.find('.//{%s}Items' % wsman.NS_WSMAN)
+	for item in items:
+	    name = utils.find_xml(item, 'InstanceID',
+				  uris.DCIM_iDRACCardEnumeration).text
+	    value = utils.find_xml(item, 'CurrentValue',
+				   uris.DCIM_iDRACCardEnumeration).text
 
-            result.append(DRACRemoteService(name=REVERSE_REMOTE_SERVICES[name],
-                          enabled=True if value == 'Enabled' else False))
-        return result
+	    result.append(DRACRemoteService(name=REVERSE_REMOTE_SERVICES[name],
+			  enabled=True if value == 'Enabled' else False))
+	return result
 
     def set_remote_services(self, settings):
-        """Sets the status of remote services
+	"""Sets the status of remote services
 
-        :param settings: a dictionary of remote services and desired status
-        :returns: nothing
-        :raises: WSManRequestFailure on request failures
-        :raises: WSManInvalidResponse when receiving invalid response
-        :raises: DRACOperationFailed on error reported back by the DRAC
-                 interface
-        """
+	:param settings: a dictionary of remote services and desired status
+	:returns: nothing
+	:raises: WSManRequestFailure on request failures
+	:raises: WSManInvalidResponse when receiving invalid response
+	:raises: DRACOperationFailed on error reported back by the DRAC
+		 interface
+	"""
 
-        selectors = {
-            'Name': 'DCIM:iDRACCardService',
-            'SystemName': 'DCIM:ComputerSystem',
-            'CreationClassName': 'DCIM_iDRACCardService',
-            'SystemCreationClassName': 'DCIM_ComputerSystem'
-        }
+	selectors = {
+	    'Name': 'DCIM:iDRACCardService',
+	    'SystemName': 'DCIM:ComputerSystem',
+	    'CreationClassName': 'DCIM_iDRACCardService',
+	    'SystemCreationClassName': 'DCIM_ComputerSystem'
+	}
 
-        job_properties = {
-            'Target': 'iDRAC.Embedded.1',
-            'ScheduledStartTime': 'TIME_NOW'
-        }
+	job_properties = {
+	    'Target': 'iDRAC.Embedded.1',
+	    'ScheduledStartTime': 'TIME_NOW'
+	}
 
-        target = 'iDRAC.Embedded.1'
-        attributes = []
-        values = []
+	target = 'iDRAC.Embedded.1'
+	attributes = []
+	values = []
 
-        for k, v in settings.items():
-            attributes.append('#'.join(REMOTE_SERVICES[k].split('#')[1:]))
-            values.append('Enabled' if v is True else 'Disabled')
+	for k, v in settings.items():
+	    attributes.append('#'.join(REMOTE_SERVICES[k].split('#')[1:]))
+	    values.append('Enabled' if v is True else 'Disabled')
 
-        properties = {
-            'Target': target,
-            'AttributeName': attributes,
-            'AttributeValue': values
-        }
+	properties = {
+	    'Target': target,
+	    'AttributeName': attributes,
+	    'AttributeValue': values
+	}
 
-        self.client.invoke(
-            uris.DCIM_iDRACCardService,
-            'SetAttributes',
-            selectors,
-            properties
-        )
+	self.client.invoke(
+	    uris.DCIM_iDRACCardService,
+	    'SetAttributes',
+	    selectors,
+	    properties
+	)
 
-        self.client.invoke(uris.DCIM_iDRACCardService,
-                           'CreateTargetedConfigJob',
-                           selectors,
-                           job_properties)
+	self.client.invoke(uris.DCIM_iDRACCardService,
+			   'CreateTargetedConfigJob',
+			   selectors,
+			   job_properties)
+
+    def set_idrac_ipv4_dhcp(self, enabled=True):
+	"""
+	"""
+
+	selectors = {
+	    'Name': 'DCIM:iDRACCardService',
+	    'SystemName': 'DCIM:ComputerSystem',
+	    'CreationClassName': 'DCIM_iDRACCardService',
+	    'SystemCreationClassName': 'DCIM_ComputerSystem'
+	}
+
+	properties = {'Target': 'iDRAC.Embedded.1',
+		      'AttributeName': 'IPv4.1#DHCPEnable',
+		      'AttributeValue': 'Enabled'}
+
+	self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+			   selectors, properties)
+
+	job_properties = {
+	    'Target': 'iDRAC.Embedded.1',
+	    'ScheduledStartTime': 'TIME_NOW'
+	}
+
+	self.client.invoke(uris.DCIM_iDRACCardService,
+			   'CreateTargetedConfigJob', selectors, job_properties)
+
+    def set_idrac_static_ipv4(self, address, netmask, gateway):
+	"""
+	"""
+
+	selectors = {
+	    'Name': 'DCIM:iDRACCardService',
+	    'SystemName': 'DCIM:ComputerSystem',
+	    'CreationClassName': 'DCIM_iDRACCardService',
+	    'SystemCreationClassName': 'DCIM_ComputerSystem'
+	}
+
+	properties = {'Target': 'iDRAC.Embedded.1',
+		      'AttributeName': 'IPv4.1#DHCPEnable',
+		      'AttributeValue': 'Disabled'}
+
+	self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+			   selectors, properties)
+
+	properties = {'Target': 'iDRAC.Embedded.1',
+		      'AttributeName': 'IPv4.1#Address',
+		      'AttributeValue': address}
+
+	self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+			   selectors, properties)
+
+	properties = {'Target': 'iDRAC.Embedded.1',
+		      'AttributeName': 'IPv4.1#Netmask',
+		      'AttributeValue': netmask}
+
+	self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+			   selectors, properties)
+
+	properties = {'Target': 'iDRAC.Embedded.1',
+		      'AttributeName': 'IPv4.1#Gateway',
+		      'AttributeValue': gateway}
+
+	self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+			   selectors, properties)
+
+	job_properties = {
+	    'Target': 'iDRAC.Embedded.1',
+	    'ScheduledStartTime': 'TIME_NOW'
+	}
+
+	self.client.invoke(uris.DCIM_iDRACCardService,
+			   'CreateTargetedConfigJob', selectors, job_properties)
+
+
+    def set_idrac_name(self, name):
+	"""
+	"""
+
+	selectors = {
+	    'Name': 'DCIM:iDRACCardService',
+	    'SystemName': 'DCIM:ComputerSystem',
+	    'CreationClassName': 'DCIM_iDRACCardService',
+	    'SystemCreationClassName': 'DCIM_ComputerSystem'
+	}
+
+	properties = {'Target': 'iDRAC.Embedded.1',
+	      'AttributeName': 'NIC.1#DNSRacName',
+	      'AttributeValue': name}
+
+	self.client.invoke(uris.DCIM_iDRACCardService, 'SetAttribute',
+		selectors, properties)
+
+	job_properties = {
+		'Target': 'iDRAC.Embedded.1',
+		'ScheduledStartTime': 'TIME_NOW'
+	}
+
+	self.client.invoke(uris.DCIM_iDRACCardService,
+		'CreateTargetedConfigJob', selectors, job_properties)
