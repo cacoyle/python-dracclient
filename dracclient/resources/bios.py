@@ -524,8 +524,8 @@ class BIOSConfiguration(object):
         :returns: a dictionary containing the current value of the
         requested setting.
         """
-        query = "select CurrentValue from DCIM_BIOSEnumeration where" \
-                "InstanceID=BIOS.Setup.1-1:%s"
+        query = "select CurrentValue from DCIM_BIOSEnumeration where " \
+                "InstanceID='BIOS.Setup.1-1:%s'"
 
         doc = self.client.enumerate(resource_uri=uris.DCIM_BIOSEnumeration,
                                     filter_query=query % setting)
