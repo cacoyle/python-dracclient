@@ -271,7 +271,7 @@ class BootManagement(object):
             'Name': 'DCIM:OSDeploymentService',
             'SystemName': 'DCIM:ComputerSystem',
             'CreationClassName': 'DCIM_OSDeploymentService',
-            'SystemCreationClassName': 'DCIM_ComputerSyste'
+            'SystemCreationClassName': 'DCIM_ComputerSystem'
         }
 
         self.client.invoke(uris.DCIM_OSDeploymentService, boot_source,

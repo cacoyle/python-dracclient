@@ -107,14 +107,24 @@ class RAIDManagement(object):
                  interface
         """
 
-        doc = self.client.enumerate(uris.DCIM_ControllerView)
+        # doc = self.client.enumerate(uris.DCIM_ControllerView)
 
-        drac_raid_controllers = utils.find_xml(doc, 'DCIM_ControllerView',
-                                               uris.DCIM_ControllerView,
-                                               find_all=True)
+        # drac_raid_controllers = utils.find_xml(doc, 'DCIM_ControllerView',
+        #                                        uris.DCIM_ControllerView,
+        #                                        find_all=True)
 
-        return [self._parse_drac_raid_controller(controller)
-                for controller in drac_raid_controllers]
+        # return [self._parse_drac_raid_controller(controller)
+        #         for controller in drac_raid_controllers]
+
+        filter_query = 'select FQDD, DeviceDescription, DeviceCardManufacturer, ' \
+                       'ProductName, ControllerFirmwareVersion from ' \
+                       'DCIM_ControllerView where InstanceID="RAID.Integrated.1-1"'
+
+        doc = self.client.enumerate(uris.DCIM_ControllerView, filter_query=filter_query)
+
+        controller = utils.find_xml(doc, 'DCIM_ControllerView', uris.DCIM_ControllerView)
+
+        return [self._parse_drac_raid_controller(controller)]
 
     def _parse_drac_raid_controller(self, drac_controller):
         return RAIDController(
@@ -130,7 +140,7 @@ class RAIDManagement(object):
 
     def _get_raid_controller_attr(self, drac_controller, attr_name):
         return utils.get_wsman_resource_attr(
-            drac_controller, uris.DCIM_ControllerView, attr_name)
+            drac_controller, uris.DCIM_ControllerView, attr_name, nullable=True, find_all=True)
 
     def list_virtual_disks(self):
         """Returns the list of virtual disks
